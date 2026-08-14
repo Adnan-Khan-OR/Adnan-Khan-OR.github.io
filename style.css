@@ -178,7 +178,7 @@ ol.num li::before{content:counter(n,decimal-leading-zero);position:absolute;left
 
 /* ---------- welcome block ---------- */
 .welcome{padding:3.4rem 0 0}
-.welcome-grid{display:grid;grid-template-columns:1fr 17rem;gap:3rem;align-items:start}
+.welcome-grid{display:grid;grid-template-columns:1fr 24rem;gap:3rem;align-items:start}
 .hello{font-family:var(--serif);font-size:2rem;font-weight:400;letter-spacing:-.02em;margin-bottom:1.1rem}
 .welcome p{font-size:1.06rem;color:var(--ink-2);max-width:var(--measure);margin-bottom:.95rem}
 .welcome p:last-of-type{margin-bottom:0}
@@ -186,7 +186,7 @@ ol.num li::before{content:counter(n,decimal-leading-zero);position:absolute;left
 .standing{position:sticky;top:6rem}
 .standing img{width:100%;border:1px solid var(--rule)}
 .standing figcaption{font-family:var(--sans);font-size:11px;color:var(--ink-4);margin-top:.5rem;line-height:1.45}
-@media(max-width:860px){.welcome-grid{grid-template-columns:1fr}.standing{position:static;max-width:15rem}}
+
 
 /* ---------- alignment overhaul ---------- */
 p,ul.plain,ol.num,.standfirst,.welcome p,.note,.footnote,figure,table,.metrics,.diagram,
@@ -230,4 +230,25 @@ section.sheet{padding:3rem 0}
   .entry .when{text-align:left}
   .aside{grid-template-columns:1fr}
   .pgrid-3{grid-template-columns:1fr 1fr}
+}
+
+/* ---------- mobile: full nav, full-width portrait ---------- */
+@media(max-width:860px){
+  .menu-btn{display:none !important}
+  .masthead-in{flex-wrap:wrap;padding-top:.85rem;padding-bottom:.55rem;gap:.35rem}
+  .masthead nav{display:flex !important;position:static;flex-direction:row;flex-wrap:wrap;
+    width:100%;gap:.55rem 1.15rem;padding:.5rem 0 .15rem;background:none;border:0;inset:auto}
+  .masthead nav a{font-size:10.5px;letter-spacing:.055em;padding-bottom:1px}
+  .wordmark{font-size:1.02rem}
+
+  .welcome{padding-top:2rem}
+  .welcome-grid{grid-template-columns:1fr;gap:1.6rem}
+  .standing{position:static;max-width:100%;order:-1;margin-bottom:.4rem}
+  .standing img{width:100%}
+  .standing figcaption{text-align:right}
+  .hello{font-size:1.8rem}
+}
+@media(max-width:520px){
+  .masthead nav a{font-size:10px;letter-spacing:.04em}
+  .masthead nav{gap:.5rem .85rem}
 }
