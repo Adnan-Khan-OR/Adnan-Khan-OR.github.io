@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stochastic Power Generation Planning | Adnan Khan</title>
+  <meta name="description" content="A visual case study of two-stage stochastic power-generation planning using SAA, Benders decomposition and CVaR.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080a0f;
+      --bg-2: #0d111a;
+      --surface: #111725;
+      --surface-2: #151d2d;
+      --line: #253048;
+      --text: #e8ecf4;
+      --muted: #94a2b8;
+      --dim: #647087;
+      --teal: #5eead4;
+      --amber: #fbbf24;
+      --violet: #8b93ff;
+      --sans: "Inter", system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --serif: "Newsreader", Georgia, serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background:
+        radial-gradient(800px 520px at 80% -5%, rgba(94,234,212,.1), transparent 64%),
+        radial-gradient(700px 500px at 5% 18%, rgba(139,147,255,.08), transparent 62%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    img { max-width: 100%; }
+    .wrap { width: min(1120px, calc(100% - 44px)); margin: 0 auto; }
+    .mono { font-family: var(--mono); }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(37,48,72,.8);
+      background: rgba(8,10,15,.82);
+      backdrop-filter: blur(16px);
+    }
+    .nav-inner {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .back, .nav-actions a {
+      font-size: 13px;
+      text-decoration: none;
+      color: var(--muted);
+    }
+    .back:hover, .nav-actions a:hover { color: var(--teal); }
+    .nav-actions { display: flex; align-items: center; gap: 20px; }
+    .pill-link {
+      padding: 7px 13px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: var(--text) !important;
+    }
+    .pill-link:hover { border-color: var(--teal); }
+    header { padding: 96px 0 76px; }
+    .eyebrow {
+      font: 500 11.5px/1.2 var(--mono);
+      letter-spacing: .19em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 18px;
+    }
+    h1 {
+      max-width: 900px;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: .98;
+      letter-spacing: -.045em;
+      margin-bottom: 25px;
+    }
+    h1 em { color: var(--teal); font-family: var(--serif); font-weight: 400; }
+    .lede { max-width: 770px; font-size: 1.12rem; color: var(--muted); }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 9px; margin: 31px 0 34px; }
+    .chip {
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(94,234,212,.2);
+      background: rgba(94,234,212,.08);
+      color: var(--teal);
+      font: 500 10.5px/1.3 var(--mono);
+    }
+    .actions { display: flex; gap: 11px; flex-wrap: wrap; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: .2s ease;
+    }
+    .button.primary { background: var(--teal); border-color: var(--teal); color: #06211e; }
+    .button:hover { transform: translateY(-2px); border-color: var(--teal); }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      margin-top: 64px;
+      border: 1px solid var(--line);
+      background: var(--line);
+      border-radius: 13px;
+      overflow: hidden;
+    }
+    .metric { background: var(--surface); padding: 23px; }
+    .metric strong { display: block; color: var(--amber); font: 500 1.65rem/1.1 var(--mono); }
+    .metric span { display: block; margin-top: 6px; color: var(--dim); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+    section { padding: 80px 0; border-top: 1px solid rgba(37,48,72,.8); }
+    section.alt { background: rgba(13,17,26,.62); }
+    .section-head { max-width: 770px; margin-bottom: 40px; }
+    h2 { font-size: clamp(1.8rem, 4vw, 2.7rem); line-height: 1.12; letter-spacing: -.03em; margin-bottom: 12px; }
+    .section-head p, .copy { color: var(--muted); }
+    .question {
+      font-family: var(--serif);
+      font-size: clamp(1.55rem, 3vw, 2.1rem);
+      line-height: 1.32;
+      color: var(--text);
+      padding: 26px 30px;
+      border-left: 3px solid var(--teal);
+      background: linear-gradient(90deg, rgba(94,234,212,.07), transparent);
+      margin-bottom: 38px;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr 50px 1fr 50px 1fr;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .flow-card, .method, .callout, .formula, .code-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .flow-card { padding: 23px; }
+    .flow-card .step { color: var(--teal); font: 500 10.5px/1.2 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    .flow-card h3 { font-size: 1rem; margin: 11px 0 8px; }
+    .flow-card p { color: var(--muted); font-size: 13.5px; }
+    .arrow { display: grid; place-items: center; color: var(--dim); font-size: 24px; }
+    .data-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 22px; align-items: start; }
+    .visual {
+      background: #fff;
+      padding: 8px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    .visual img { width: 100%; display: block; border-radius: 7px; }
+    .caption { color: var(--dim); font-size: 12px; margin-top: 9px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 12px 13px; text-align: left; border-bottom: 1px solid var(--line); }
+    th { color: var(--dim); font: 500 10.5px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+    td { color: var(--muted); }
+    td strong { color: var(--text); }
+    .table-wrap { border: 1px solid var(--line); border-radius: 12px; overflow-x: auto; background: var(--surface); }
+    .method-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .method { padding: 25px; }
+    .method .number { color: var(--amber); font: 500 12px/1 var(--mono); }
+    .method h3 { margin: 14px 0 9px; font-size: 1.05rem; }
+    .method p { color: var(--muted); font-size: 13.5px; }
+    .formula { padding: 25px; margin-top: 22px; }
+    .formula code { color: var(--teal); font: 500 clamp(.8rem, 1.8vw, 1.05rem)/1.7 var(--mono); }
+    .result-layout { display: grid; grid-template-columns: .9fr 1.1fr; gap: 22px; margin-top: 24px; align-items: start; }
+    .result-layout.reverse { grid-template-columns: 1.2fr .8fr; margin-top: 32px; }
+    .kpi-stack { display: grid; gap: 12px; }
+    .callout { padding: 21px 23px; }
+    .callout strong { color: var(--amber); font: 500 1.28rem/1.1 var(--mono); }
+    .callout p { color: var(--muted); font-size: 13px; margin-top: 6px; }
+    .insight {
+      margin-top: 26px;
+      padding: 24px 26px;
+      border-radius: 12px;
+      border: 1px solid rgba(251,191,36,.25);
+      background: rgba(251,191,36,.06);
+      color: #d9cba0;
+    }
+    .code-card { overflow: hidden; }
+    .code-head { padding: 12px 17px; border-bottom: 1px solid var(--line); color: var(--dim); font: 500 11px/1.2 var(--mono); }
+    pre { overflow-x: auto; padding: 21px; color: #cbd5e8; font: 12.5px/1.7 var(--mono); }
+    .code-accent { color: var(--teal); }
+    .explain-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 22px; }
+    .quote {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 31px;
+      background: var(--surface);
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      line-height: 1.45;
+    }
+    .limitations { display: grid; gap: 11px; }
+    .limitations div { padding: 17px 19px; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); font-size: 13px; background: var(--surface); }
+    .limitations b { color: var(--text); }
+    .download-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .download {
+      display: block;
+      min-height: 132px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      text-decoration: none;
+      transition: .2s;
+    }
+    .download:hover { border-color: var(--teal); transform: translateY(-2px); }
+    .download b { display: block; margin-bottom: 8px; }
+    .download span { color: var(--dim); font-size: 12px; }
+    footer { padding: 34px 0; border-top: 1px solid var(--line); color: var(--dim); font: 400 11.5px/1.5 var(--mono); }
+    @media (max-width: 900px) {
+      .metric-grid { grid-template-columns: repeat(2, 1fr); }
+      .flow { grid-template-columns: 1fr; }
+      .arrow { transform: rotate(90deg); min-height: 32px; }
+      .data-grid, .result-layout, .result-layout.reverse, .explain-grid { grid-template-columns: 1fr; }
+      .method-grid { grid-template-columns: 1fr; }
+      .download-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .wrap { width: min(100% - 28px, 1120px); }
+      header { padding-top: 65px; }
+      section { padding: 62px 0; }
+      .nav-actions a:not(.pill-link) { display: none; }
+      .metric-grid, .download-grid { grid-template-columns: 1fr; }
+      .metric { padding: 19px; }
+      .question { padding: 21px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="wrap nav-inner">
+      <a class="back mono" href="index.html">← Adnan Khan / Portfolio</a>
+      <div class="nav-actions">
+        <a href="#results">Results</a>
+        <a href="#code">Code</a>
+        <a class="pill-link" href="projects/stochastic-power-generation/notebooks/SO-P1-Adnan-Khan-clean.ipynb" download>Notebook ↓</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <div class="wrap">
+      <p class="eyebrow">Operations research case study · Energy systems</p>
+      <h1>Planning power capacity <em>before demand is known.</em></h1>
+      <p class="lede">A two-stage stochastic optimization model that chooses coal, gas, nuclear and oil capacity under uncertain base, medium and peak electricity demand—solved with SAA, Benders decomposition and CVaR.</p>
+      <div class="hero-meta">
+        <span class="chip">Two-stage stochastic LP</span>
+        <span class="chip">SAA</span>
+        <span class="chip">Benders L-shaped</span>
+        <span class="chip">CVaR</span>
+        <span class="chip">Python · CVXPY</span>
+      </div>
+      <div class="actions">
+        <a class="button primary" href="#problem">Explore the case study</a>
+        <a class="button" href="projects/stochastic-power-generation/power_planning.py">View cleaned code</a>
+        <a class="button" href="projects/stochastic-power-generation/reports/project-brief.pdf" target="_blank">Project brief</a>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><strong>15 MW</strong><span>Optimal total capacity</span></div>
+        <div class="metric"><strong>359.14</strong><span>SAA objective · EUR/MWh</span></div>
+        <div class="metric"><strong>11</strong><span>Benders iterations</span></div>
+        <div class="metric"><strong>0.000325</strong><span>EF vs Benders difference</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="problem">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">01 · The problem</p>
+          <h2>One decision now. Many possible operating futures.</h2>
+          <p>A planner commits to expensive generation assets today, then adapts dispatch when uncertain demand is revealed.</p>
+        </div>
+        <p class="question">What generation mix minimizes investment, production and shortage costs while remaining robust to uncertain electricity demand?</p>
+        <div class="flow">
+          <article class="flow-card">
+            <span class="step">Stage 1 · Before uncertainty</span>
+            <h3>Install capacity</h3>
+            <p>Choose coal, gas, nuclear and oil capacity, subject to at least 15 MW in total.</p>
+          </article>
+          <div class="arrow">→</div>
+          <article class="flow-card">
+            <span class="step">Uncertainty</span>
+            <h3>Demand is observed</h3>
+            <p>A scenario reveals the base, medium and peak load-block requirements.</p>
+          </article>
+          <div class="arrow">→</div>
+          <article class="flow-card">
+            <span class="step">Stage 2 · Recourse</span>
+            <h3>Dispatch or shed load</h3>
+            <p>Allocate generation across demand blocks; shortage remains feasible but expensive.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="alt" id="data">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">02 · Data and uncertainty</p>
+          <h2>Three load blocks, four technologies.</h2>
+          <p>Demand is generated from fitted lognormal distributions. Load shedding guarantees complete recourse and carries block-specific penalties.</p>
+        </div>
+        <div class="data-grid">
+          <div>
+            <div class="visual"><img src="assets/projects/stochastic-power-generation/demand-distributions.png" alt="Sampled probability distributions for base, medium and peak demand"></div>
+            <p class="caption">10,000 diagnostic scenarios. Peak demand has the widest relative spread and the longest right tail.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Block</th><th>Mean MW</th><th>Std MW</th><th>Penalty</th></tr></thead>
+              <tbody>
+                <tr><td><strong>D1 · Base</strong></td><td>5.318</td><td>0.402</td><td>180</td></tr>
+                <tr><td><strong>D2 · Medium</strong></td><td>2.775</td><td>0.556</td><td>200</td></tr>
+                <tr><td><strong>D3 · Peak</strong></td><td>1.463</td><td>0.970</td><td>220</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="method">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">03 · Model and method</p>
+          <h2>Direct solution, decomposition and tail-risk control.</h2>
+          <p>Three complementary methods expose both the optimal decision and the algorithmic structure behind it.</p>
+        </div>
+        <div class="method-grid">
+          <article class="method"><span class="number">01</span><h3>SAA extensive form</h3><p>Replace the expected recourse cost with the average across sampled demand scenarios and solve the full deterministic equivalent.</p></article>
+          <article class="method"><span class="number">02</span><h3>Multi-cut Benders</h3><p>Separate the capacity master from one operating subproblem per scenario. Use dual subgradients to tighten scenario-level recourse approximations.</p></article>
+          <article class="method"><span class="number">03</span><h3>CVaR formulation</h3><p>Replace average recourse cost with tail conditional cost at confidence level alpha to quantify the price of protecting against adverse outcomes.</p></article>
+        </div>
+        <div class="formula"><code>min investment(x) + eta + [1 / ((1 - alpha)N)] Σ s_k</code><br><code>s_k ≥ Q_k(x) - eta</code></div>
+      </div>
+    </section>
+
+    <section class="alt" id="results">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">04 · Results</p>
+          <h2>A reproducible risk-neutral benchmark.</h2>
+          <p>The 500-scenario extensive form and Benders decomposition converge to effectively the same objective.</p>
+        </div>
+        <div class="result-layout">
+          <div class="kpi-stack">
+            <div class="callout"><strong>359.1403 EUR/MWh</strong><p>SAA extensive-form objective with 500 scenarios.</p></div>
+            <div class="callout"><strong>359.1407 EUR/MWh</strong><p>Benders objective after 11 iterations.</p></div>
+            <div class="callout"><strong>360.0494 EUR/MWh</strong><p>Expected cost on 2,000 fresh out-of-sample scenarios.</p></div>
+          </div>
+          <div>
+            <div class="visual"><img src="assets/projects/stochastic-power-generation/risk-neutral-capacity.png" alt="Risk-neutral optimal capacities for coal, gas, nuclear and oil"></div>
+            <p class="caption">Risk-neutral capacity: coal 3.508, gas 1.652, nuclear 5.538 and oil 4.302 MW.</p>
+          </div>
+        </div>
+        <div class="result-layout reverse">
+          <div>
+            <div class="visual"><img src="assets/projects/stochastic-power-generation/benders-convergence.png" alt="Benders lower and upper bounds converging over 11 iterations"></div>
+            <p class="caption">The lower and upper bounds meet at iteration 11; the final extensive-form difference is 0.000325 EUR/MWh.</p>
+          </div>
+          <div>
+            <div class="visual"><img src="assets/projects/stochastic-power-generation/saa-stability.png" alt="SAA objective across sample sizes"></div>
+            <p class="caption">Sample-size diagnostic. N=500 was selected as the largest tested, computationally tractable sample; repeated-seed confidence intervals are a recommended extension.</p>
+          </div>
+        </div>
+        <div class="insight"><strong>Validation insight:</strong> the 2,000-scenario out-of-sample result is within about 0.25% of the 500-scenario in-sample objective, supporting the practical quality of the selected solution.</div>
+      </div>
+    </section>
+
+    <section id="risk">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">05 · Risk aversion</p>
+          <h2>Risk changes the mix—not the total.</h2>
+          <p>The 15 MW minimum remains binding at every confidence level. A more risk-averse planner reallocates capacity among technologies.</p>
+        </div>
+        <div class="visual"><img src="assets/projects/stochastic-power-generation/risk-aversion-capacity-mix.png" alt="Capacity mix across CVaR confidence levels"></div>
+        <div class="table-wrap" style="margin-top:22px">
+          <table>
+            <thead><tr><th>Alpha</th><th>Coal</th><th>Gas</th><th>Nuclear</th><th>Oil</th><th>Total</th><th>CVaR objective</th></tr></thead>
+            <tbody>
+              <tr><td><strong>0.00</strong></td><td>3.455</td><td>1.524</td><td>5.541</td><td>4.479</td><td>15.0</td><td>357.457</td></tr>
+              <tr><td><strong>0.50</strong></td><td>3.922</td><td>1.531</td><td>5.678</td><td>3.870</td><td>15.0</td><td>377.599</td></tr>
+              <tr><td><strong>0.75</strong></td><td>4.424</td><td>1.654</td><td>5.656</td><td>3.266</td><td>15.0</td><td>393.428</td></tr>
+              <tr><td><strong>0.90</strong></td><td>4.804</td><td>2.031</td><td>5.731</td><td>2.434</td><td>15.0</td><td>412.049</td></tr>
+              <tr><td><strong>0.95</strong></td><td>5.648</td><td>2.211</td><td>5.636</td><td>1.505</td><td>15.0</td><td>427.577</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="insight"><strong>Decision insight:</strong> coal and gas grow, oil declines, and nuclear remains comparatively stable. The increasing CVaR objective measures the modeled price of tail-risk protection.</div>
+      </div>
+    </section>
+
+    <section class="alt" id="code">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">06 · Cleaned implementation</p>
+          <h2>Code organized around decisions and verification.</h2>
+          <p>The refactored module separates sampling, extensive forms, recourse evaluation, decomposition, CVaR evaluation and tests.</p>
+        </div>
+        <div class="code-card">
+          <div class="code-head">power_planning.py · corrected CVaR multi-cut</div>
+          <pre><span class="code-accent">for</span> scenario_index <span class="code-accent">in</span> range(sample_size):
+    master_constraints.append(
+        excess[scenario_index]
+        &gt;= recourse_values[scenario_index]
+        + subgradients[scenario_index] @ (capacity - capacity_hat)
+        - eta
+    )</pre>
+        </div>
+        <div class="insight"><strong>Why this matters:</strong> keeping <span class="mono">-eta</span> in the cut links each scenario's excess loss to the master VaR decision. Automated tests now verify that CVaR-Benders matches the extensive form on the same scenarios.</div>
+      </div>
+    </section>
+
+    <section id="explanation">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">07 · My explanation</p>
+          <h2>How I would explain the project in an interview.</h2>
+        </div>
+        <div class="explain-grid">
+          <p class="quote">“I treated generation planning as a sequence of decisions. Capacity must be purchased before demand is known, while dispatch can adapt afterward. I first solved the sampled model directly, then reproduced it with Benders decomposition. Finally, I used CVaR to show how the technology mix changes when tail losses matter more than average cost.”</p>
+          <div class="limitations">
+            <div><b>Strength:</b> extensive-form and Benders objectives are independently cross-validated.</div>
+            <div><b>Limitation:</b> demand blocks are assumed independent and represented by fitted distributions.</div>
+            <div><b>Next step:</b> use repeated SAA replications, confidence intervals and correlated demand.</div>
+            <div><b>Model scope:</b> the implementation follows the assignment's aggregate capacity convention exactly.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="alt" id="downloads">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">08 · Files and reproducibility</p>
+          <h2>Inspect the work behind the conclusions.</h2>
+        </div>
+        <div class="download-grid">
+          <a class="download" href="projects/stochastic-power-generation/power_planning.py"><b>Cleaned Python model</b><span>SAA, Benders, CVaR and evaluation functions.</span></a>
+          <a class="download" href="projects/stochastic-power-generation/notebooks/SO-P1-Adnan-Khan-clean.ipynb" download><b>Clean notebook</b><span>Concise walkthrough and reproducibility checks.</span></a>
+          <a class="download" href="projects/stochastic-power-generation/reports/project-brief.pdf" target="_blank"><b>Project brief</b><span>Original five-page academic assignment.</span></a>
+          <a class="download" href="projects/stochastic-power-generation/results/cvar_capacity_mix.csv"><b>Result data</b><span>Machine-readable capacity and CVaR outputs.</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap">Adnan Khan · Operations Research &amp; Risk Analytics · CentraleSupelec · 2026</div></footer>
+</body>
+</html>
