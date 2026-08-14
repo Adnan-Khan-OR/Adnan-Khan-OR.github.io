@@ -252,3 +252,33 @@ section.sheet{padding:3rem 0}
   .masthead nav a{font-size:10px;letter-spacing:.04em}
   .masthead nav{gap:.5rem .85rem}
 }
+
+/* ---------- justified body text ---------- */
+p,
+.standfirst,
+.welcome p,
+.lead,
+.note,
+.footnote,
+ul.plain li,
+ol.num li,
+.thesis li,
+.record p,
+.entry p,
+.sec-head p,
+.aside dd,
+blockquote{
+  text-align:justify;
+  text-justify:inter-word;
+  hyphens:auto;
+  -webkit-hyphens:auto;
+  -ms-hyphens:auto;
+  overflow-wrap:break-word;
+}
+/* short or tabular text stays ragged-right */
+figcaption,.byline,.byline span,.contact-card dd,.contact-card dt,
+table th,table td,.keys,.key,.sig,cite,.when,.org,.metric .l,.metric .n,
+.masthead nav a,.wordmark,.folio,.eyebrow,.label,h1,h2,h3,.hello{
+  text-align:left;
+  hyphens:manual;
+}
