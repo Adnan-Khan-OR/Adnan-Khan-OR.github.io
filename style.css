@@ -6,7 +6,7 @@
   --rule:#DCDCDC; --rule-2:#EFEFEF; --wash:#F7F7F5;
   --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
   --sans:'Inter',system-ui,-apple-system,sans-serif;
-  --measure:34rem;
+  --measure:40rem;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
@@ -17,12 +17,12 @@ a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule);tran
 a:hover{border-bottom-color:var(--ink)}
 
 .label{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
-.container{max-width:76rem;margin:0 auto;padding:0 2.5rem}
+.container{max-width:62rem;margin:0 auto;padding:0 2.5rem}
 .narrow{max-width:var(--measure)}
 
 /* ---------- masthead ---------- */
 .masthead{border-bottom:1px solid var(--ink);position:sticky;top:0;background:var(--paper);z-index:60}
-.masthead-in{max-width:76rem;margin:0 auto;padding:1rem 2.5rem;display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+.masthead-in{max-width:62rem;margin:0 auto;padding:1rem 2.5rem;display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
 .wordmark{font-family:var(--serif);font-size:1.18rem;font-weight:600;letter-spacing:-.01em;border:0}
 .wordmark span{font-weight:300;color:var(--ink-3)}
 .masthead nav{display:flex;gap:1.7rem;flex-wrap:wrap}
@@ -38,7 +38,7 @@ a:hover{border-bottom-color:var(--ink)}
   color:var(--ink-3);margin-bottom:1.6rem;display:flex;gap:.7rem;align-items:center}
 .folio::after{content:'';flex:1;height:1px;background:var(--rule)}
 h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.3rem,5.2vw,3.7rem);line-height:1.08;letter-spacing:-.022em;margin-bottom:1.3rem}
-.standfirst{font-size:1.18rem;color:var(--ink-2);max-width:44rem;font-weight:300;line-height:1.55}
+.standfirst{font-size:1.18rem;color:var(--ink-2);max-width:var(--measure);font-weight:300;line-height:1.55}
 .byline{font-family:var(--sans);font-size:12px;color:var(--ink-3);margin-top:1.9rem;display:flex;gap:1.6rem;flex-wrap:wrap}
 .byline b{font-weight:600;color:var(--ink-2)}
 
@@ -49,26 +49,26 @@ section.sheet:last-of-type{border-bottom:0}
 h2{font-family:var(--serif);font-weight:600;font-size:1.62rem;letter-spacing:-.012em;margin-bottom:1.15rem;line-height:1.2}
 h3{font-family:var(--serif);font-weight:600;font-size:1.16rem;margin:2rem 0 .6rem}
 p{margin-bottom:1.05rem;max-width:var(--measure)}
-p.wide{max-width:52rem}
+p.wide{max-width:100%}
 .lead::first-letter{font-size:3.1rem;line-height:.82;float:left;padding:.1rem .55rem .1rem 0;font-weight:400}
 
 /* two column */
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:3.2rem}
-.cols-side{display:grid;grid-template-columns:1fr 17rem;gap:3.4rem;align-items:start}
+.cols-side{display:grid;grid-template-columns:1fr 15rem;gap:2.8rem;align-items:start}
 .aside{font-family:var(--sans);font-size:13px;line-height:1.6;color:var(--ink-2);border-top:2px solid var(--ink);padding-top:.9rem}
 .aside dt{font-size:10.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-4);margin-top:1.05rem}
 .aside dt:first-child{margin-top:0}
 .aside dd{margin-bottom:.15rem}
 
 /* figures */
-figure{margin:2.1rem 0;max-width:52rem}
+figure{margin:2.1rem 0;max-width:100%}
 figure img{border:1px solid var(--rule)}
 figcaption{font-family:var(--sans);font-size:12.5px;color:var(--ink-3);margin-top:.7rem;line-height:1.5;padding-left:0}
 figcaption b{color:var(--ink);font-weight:600}
 .fig-frame{border:1px solid var(--rule);padding:1.6rem;background:var(--paper)}
 
 /* data table */
-table{width:100%;border-collapse:collapse;margin:1.7rem 0;font-family:var(--sans);font-size:13.5px;max-width:52rem}
+table{width:100%;border-collapse:collapse;margin:1.7rem 0;font-family:var(--sans);font-size:13.5px;max-width:100%}
 th{text-align:left;font-weight:600;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
   border-bottom:1.5px solid var(--ink);padding:.5rem .9rem .5rem 0}
 td{padding:.62rem .9rem .62rem 0;border-bottom:1px solid var(--rule-2);color:var(--ink-2);vertical-align:top}
@@ -77,7 +77,7 @@ tr:last-child td{border-bottom:1px solid var(--rule)}
 
 /* metrics */
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:0;border-top:2px solid var(--ink);
-  border-bottom:1px solid var(--rule);margin:2rem 0;max-width:52rem}
+  border-bottom:1px solid var(--rule);margin:2rem 0;max-width:100%}
 .metric{padding:1.15rem 1.3rem 1.15rem 0;border-right:1px solid var(--rule-2)}
 .metric:last-child{border-right:0}
 .metric .n{font-family:var(--serif);font-size:1.85rem;font-weight:400;line-height:1;letter-spacing:-.02em}
@@ -99,7 +99,7 @@ ol.num li::before{content:counter(n,decimal-leading-zero);position:absolute;left
 .entry h3{margin:0 0 .3rem;font-size:1.2rem}
 .entry h3 a{border:0}
 .entry h3 a:hover{border-bottom:1px solid var(--ink)}
-.entry p{font-size:.95rem;color:var(--ink-3);margin:0;max-width:42rem}
+.entry p{font-size:.95rem;color:var(--ink-3);margin:0;max-width:var(--measure)}
 .entry .when{font-family:var(--sans);font-size:11.5px;color:var(--ink-3);text-align:right;letter-spacing:.03em}
 .keys{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
 .key{font-family:var(--sans);font-size:10.5px;letter-spacing:.05em;color:var(--ink-3);border:1px solid var(--rule);padding:.16rem .5rem}
@@ -110,17 +110,17 @@ ol.num li::before{content:counter(n,decimal-leading-zero);position:absolute;left
 .record .when{font-family:var(--sans);font-size:11.5px;color:var(--ink-3);letter-spacing:.03em;line-height:1.55;padding-top:.3rem}
 .record h3{margin:0 0 .18rem;font-size:1.2rem}
 .record .org{font-family:var(--sans);font-size:12.5px;color:var(--ink-2);margin-bottom:.75rem;font-weight:500}
-.record p{max-width:46rem;font-size:1rem;color:var(--ink-2)}
+.record p{max-width:var(--measure);font-size:1rem;color:var(--ink-2)}
 
 /* diagram */
-.diagram{border:1px solid var(--rule);padding:2rem 1.4rem;margin:2.1rem 0;max-width:52rem;overflow-x:auto}
+.diagram{border:1px solid var(--rule);padding:2rem 1.4rem;margin:2.1rem 0;max-width:100%;overflow-x:auto}
 .diagram svg{width:100%;height:auto;min-width:520px;display:block}
 
 /* pull quote / note */
-.note{border-left:2px solid var(--ink);padding:.15rem 0 .15rem 1.3rem;margin:1.9rem 0;max-width:44rem;
+.note{border-left:2px solid var(--ink);padding:.15rem 0 .15rem 1.3rem;margin:1.9rem 0;max-width:var(--measure);
   font-size:.98rem;color:var(--ink-2);font-style:italic}
 .footnote{font-family:var(--sans);font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--rule);
-  padding-top:1rem;margin-top:2.6rem;max-width:52rem;line-height:1.6}
+  padding-top:1rem;margin-top:2.6rem;max-width:100%;line-height:1.6}
 
 /* prev/next */
 .pager{display:flex;justify-content:space-between;gap:2rem;padding:2.6rem 0;border-top:1px solid var(--ink);margin-top:1rem}
@@ -135,7 +135,7 @@ ol.num li::before{content:counter(n,decimal-leading-zero);position:absolute;left
 
 /* placeholder for user assets */
 .slot{border:1px dashed var(--ink-4);background:var(--wash);padding:2.2rem 1.4rem;text-align:center;
-  font-family:var(--sans);font-size:12px;color:var(--ink-3);letter-spacing:.04em;margin:1.6rem 0;max-width:52rem}
+  font-family:var(--sans);font-size:12px;color:var(--ink-3);letter-spacing:.04em;margin:1.6rem 0;max-width:100%}
 
 @media(max-width:860px){
   body{font-size:17px}
@@ -153,23 +153,20 @@ ol.num li::before{content:counter(n,decimal-leading-zero);position:absolute;left
 @media print{.masthead,.pager,.menu-btn{display:none}body{font-size:11pt}}
 
 /* ---------- photography ---------- */
-.photo,.pgrid-2 img,.pgrid-3 img,.hero-photo img{
-  filter:grayscale(1) contrast(1.04);transition:filter .5s ease}
-.photo:hover,.pgrid-2 figure:hover img,.pgrid-3 figure:hover img,.hero-photo:hover img{filter:grayscale(0) contrast(1)}
-.hero-grid{display:grid;grid-template-columns:1fr 20rem;gap:3.4rem;align-items:end}
+.photo,.pgrid-2 img,.pgrid-3 img,.hero-photo img{filter:none}
+.hero-grid{display:grid;grid-template-columns:1fr 17rem;gap:3rem;align-items:start}
 .hero-photo{position:relative}
 .hero-photo img{width:100%;border:1px solid var(--rule)}
 .hero-photo figcaption{margin-top:.55rem}
-.plate{margin:2.2rem 0;max-width:52rem}
+.plate{margin:2.2rem 0;max-width:100%}
 .plate img{width:100%;border:1px solid var(--rule)}
-.pgrid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin:2.2rem 0;max-width:52rem}
-.pgrid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin:2.2rem 0;max-width:52rem}
+.pgrid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin:2.2rem 0;max-width:100%}
+.pgrid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin:2.2rem 0;max-width:100%}
 .pgrid-2 figure,.pgrid-3 figure{margin:0}
 .pgrid-2 img,.pgrid-3 img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;border:1px solid var(--rule)}
 .pgrid-3 img{aspect-ratio:1/1}
 .ed-photo{float:right;width:13rem;margin:0 0 1.2rem 2rem}
-.ed-photo img{width:100%;border:1px solid var(--rule);filter:grayscale(1) contrast(1.04);transition:filter .5s}
-.ed-photo:hover img{filter:grayscale(0)}
+.ed-photo img{width:100%;border:1px solid var(--rule)}
 .ed-photo figcaption{font-family:var(--sans);font-size:11px;color:var(--ink-4);margin-top:.4rem;line-height:1.4}
 @media(max-width:860px){
   .hero-grid{grid-template-columns:1fr}
@@ -177,3 +174,15 @@ ol.num li::before{content:counter(n,decimal-leading-zero);position:absolute;left
   .pgrid-3{grid-template-columns:1fr 1fr}
   .ed-photo{float:none;width:100%;max-width:20rem;margin:1.2rem 0}
 }
+
+/* ---------- welcome block ---------- */
+.welcome{padding:3.4rem 0 0}
+.welcome-grid{display:grid;grid-template-columns:1fr 17rem;gap:3rem;align-items:start}
+.hello{font-family:var(--serif);font-size:2rem;font-weight:400;letter-spacing:-.02em;margin-bottom:1.1rem}
+.welcome p{font-size:1.06rem;color:var(--ink-2);max-width:var(--measure);margin-bottom:.95rem}
+.welcome p:last-of-type{margin-bottom:0}
+.welcome .sig{font-family:var(--sans);font-size:12px;letter-spacing:.06em;color:var(--ink-3);margin-top:1.6rem}
+.standing{position:sticky;top:6rem}
+.standing img{width:100%;border:1px solid var(--rule)}
+.standing figcaption{font-family:var(--sans);font-size:11px;color:var(--ink-4);margin-top:.5rem;line-height:1.45}
+@media(max-width:860px){.welcome-grid{grid-template-columns:1fr}.standing{position:static;max-width:15rem}}
