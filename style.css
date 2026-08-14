@@ -6,7 +6,7 @@
   --rule:#DCDCDC; --rule-2:#EFEFEF; --wash:#F7F7F5;
   --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
   --sans:'Inter',system-ui,-apple-system,sans-serif;
-  --measure:40rem;
+  --measure:100%;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
@@ -17,7 +17,8 @@ a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule);tran
 a:hover{border-bottom-color:var(--ink)}
 
 .label{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
-.container{max-width:62rem;margin:0 auto;padding:0 2.5rem}
+.container{max-width:47rem;margin:0 auto;padding:0 2rem}
+.container.wide{max-width:62rem}
 .narrow{max-width:var(--measure)}
 
 /* ---------- masthead ---------- */
@@ -186,3 +187,47 @@ ol.num li::before{content:counter(n,decimal-leading-zero);position:absolute;left
 .standing img{width:100%;border:1px solid var(--rule)}
 .standing figcaption{font-family:var(--sans);font-size:11px;color:var(--ink-4);margin-top:.5rem;line-height:1.45}
 @media(max-width:860px){.welcome-grid{grid-template-columns:1fr}.standing{position:static;max-width:15rem}}
+
+/* ---------- alignment overhaul ---------- */
+p,ul.plain,ol.num,.standfirst,.welcome p,.note,.footnote,figure,table,.metrics,.diagram,
+.thesis ul,.thesis li,.entry p,.record p,.sec-head p,.aside{max-width:100%}
+.page-head{padding:4rem 0 2.4rem}
+h1{max-width:100%}
+.standfirst{font-size:1.14rem}
+.byline{display:flex;gap:1.4rem 2.2rem;flex-wrap:wrap;padding-top:1.4rem;border-top:1px solid var(--rule);margin-top:1.7rem}
+.sec-no{display:none}
+h2{margin-bottom:1rem}
+section.sheet{padding:3rem 0}
+.cols-side{grid-template-columns:1fr;gap:2rem}
+.aside{border-top:1px solid var(--rule);padding-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:.2rem 2rem}
+.entry{grid-template-columns:1fr 8.5rem;gap:1.4rem}
+.entry .idx{display:none}
+.record{grid-template-columns:9.5rem 1fr;gap:2rem}
+.pgrid-3{grid-template-columns:repeat(3,1fr)}
+.diagram{padding:1.5rem 1rem}
+.diagram svg{min-width:430px}
+.ed-photo{width:11rem;margin:0 0 1rem 1.6rem}
+
+/* quote block */
+.quote{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:2rem 0;margin:0 0 1rem;
+  display:grid;grid-template-columns:7.5rem 1fr;gap:2rem;align-items:start}
+.quote img{width:100%;border:1px solid var(--rule)}
+.quote blockquote{font-family:var(--serif);font-size:1.24rem;font-weight:300;line-height:1.45;font-style:italic;color:var(--ink);margin-bottom:.9rem}
+.quote cite{font-family:var(--sans);font-size:11.5px;font-style:normal;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+
+/* contact card on front page */
+.contact-card{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.6rem 0;margin:2.6rem 0 0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.3rem 2rem}
+.contact-card dt{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.28rem}
+.contact-card dd{font-size:.97rem;color:var(--ink-2);word-break:break-word}
+.contact-card dd a{border-bottom-color:var(--rule)}
+
+@media(max-width:860px){
+  .quote{grid-template-columns:1fr}
+  .quote img{max-width:9rem}
+  .record{grid-template-columns:1fr;gap:.5rem}
+  .entry{grid-template-columns:1fr}
+  .entry .when{text-align:left}
+  .aside{grid-template-columns:1fr}
+  .pgrid-3{grid-template-columns:1fr 1fr}
+}
